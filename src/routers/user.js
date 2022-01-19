@@ -1,7 +1,8 @@
 const express=require('express')
 const router=new express.Router()
+const jwt=require('jsonwebtoken')
 const User=require('../model/user')
-const {sendwelcomeemail}=require('../emails/account')
+const {sendwelcomeemail,sendresetpasswordemail}=require('../emails/account')
 
 router.post('/register',async(req,res)=>{
     const user=new User(req.body)
@@ -31,5 +32,23 @@ router.post('/login',async(req,res)=>{
         res.status(400).send(e)
     }
 })
+
+router.put('/forgotpassword',async(req,res)=>{
+
+        const user =await User.findOne({email: req.body.email})
+        if(!user){
+            return res.status(400).send('Email is not available!')
+        }
+        const result=user.tokens.token
+        res.send(result)
+        try{
+                        //sendresetpasswordemail(user.email)
+            
+        }catch(e){
+            res.send("err")
+        }
+            
+})
+
 
 module.exports=router

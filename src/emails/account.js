@@ -11,6 +11,16 @@ const sendwelcomeemail=(email,firstname)=>{
     })
 }
 
+const sendresetpasswordemail=(email)=>{
+    sgmail.send({
+        to:email,
+        from:"koladiyadhruvi532@gmail.com",
+        subject:"Reset password link!",
+        html:`<h2>Please click on given link to reset you password</h2>`
+    })
+}
+
 module.exports={
-    sendwelcomeemail
+    sendwelcomeemail,
+    sendresetpasswordemail
 }
