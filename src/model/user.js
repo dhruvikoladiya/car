@@ -29,7 +29,7 @@ const userschema=new mongoose.Schema({
     password:{
         type:String,
         trim:true,
-        minlength:7,
+        minlength:8,
         required:true,
         validate(value){
             if(value.toLowerCase().includes('Password')){
@@ -49,7 +49,7 @@ const userschema=new mongoose.Schema({
 
 userschema.methods.generateAuthToken=async function(){
     const user=this
-    const token=jwt.sign({_id:user._id.toString()},process.env.JET_SECRET)
+    const token=jwt.sign({_id:user._id.toString()},process.env.JWT_SECRET)
 
     user.tokens=user.tokens.concat({token})
     await user.save()
@@ -81,4 +81,21 @@ userschema.pre('save',async function(next){
 
 const User=mongoose.model('User',userschema)
 
-module.exports=User
+const otpschema=new mongoose.Schema({
+    email:{
+        type:String,
+        Required:true,
+        trim:true,
+        lowercase:true
+    },
+    timeout:{
+        type:Number   
+    }
+})
+
+const otptimeouts=mongoose.model('otptimeouts',otpschema)
+
+module.exports={
+    User,
+    otptimeouts
+}
