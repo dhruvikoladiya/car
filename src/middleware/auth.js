@@ -1,7 +1,8 @@
 const jwt=require('jsonwebtoken')
-const User=require('../model/user')
+const {User,otptimeouts}=require('../model/user')
+const {Provider,Serviceprovider}=require('../model/serviceprovider')
 
-const auth=async (req,res,next)=>{
+const authuser=async (req,res,next)=>{
     try{
         const token=req.header('Authorization').replace('Bearer ','')
         const decoded=jwt.verify(token, process.env.JWT_SECRET)
@@ -15,8 +16,29 @@ const auth=async (req,res,next)=>{
         req.user=user
         next()
     }catch(e){
-        res.status(401).send('Please Authenticate.')
+        res.status(401).json({message:"Please Authenticate."})
     }
 }
 
-module.exports=auth
+const authserviceprovider=async (req,res,next)=>{
+    try{
+        const token=req.header('Authorization').replace('Bearer ','')
+        const decoded=jwt.verify(token, process.env.JWT_SECRET)
+        const provider=await Provider.findOne({_id:decoded._id,'tokens.token':token})
+
+        if(!provider){
+            throw new Error()
+        }
+
+        req.token=token
+        req.provider=provider
+        next()
+    }catch(e){
+        res.status(401).json({message:"Please Authenticate."})
+    }
+}
+
+module.exports={
+    authuser,
+    authserviceprovider
+}

@@ -47,6 +47,31 @@ const userschema=new mongoose.Schema({
     timestamps:true
 })
 
+const otpschema=new mongoose.Schema({
+    email:{
+        type:String,
+        Required:true,
+        trim:true,
+        lowercase:true
+    },
+    timeout:{
+        type:Number   
+    }
+},{
+    timestamps:true
+})
+
+userschema.methods.toJSON=function(){
+    const user=this
+    const userobject=user.toObject()    
+
+    delete userobject.password
+    delete userobject.tokens
+
+    return userobject
+}
+
+
 userschema.methods.generateAuthToken=async function(){
     const user=this
     const token=jwt.sign({_id:user._id.toString()},process.env.JWT_SECRET)
@@ -80,18 +105,6 @@ userschema.pre('save',async function(next){
 })
 
 const User=mongoose.model('User',userschema)
-
-const otpschema=new mongoose.Schema({
-    email:{
-        type:String,
-        Required:true,
-        trim:true,
-        lowercase:true
-    },
-    timeout:{
-        type:Number   
-    }
-})
 
 const otptimeouts=mongoose.model('otptimeouts',otpschema)
 

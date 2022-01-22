@@ -11,14 +11,18 @@
   "license": "ISC",
   "dependencies": {
     "@sendgrid/mail": "^7.6.0",
+    "aadhaar-validator": "^1.1.0",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
     "env-cmd": "^10.1.0",
     "express": "^4.17.2",
+    "ifsc": "^2.0.5",
     "jsonwebtoken": "^8.5.1",
     "mongodb": "^4.3.0",
     "mongoose": "^6.1.7",
+    "multer": "^1.4.4",
+    "sharp": "^0.29.3",
     "validator": "^13.7.0"
   },
   "devDependencies": {

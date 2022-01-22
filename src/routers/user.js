@@ -4,7 +4,7 @@ const jwt=require('jsonwebtoken')
 const {User,otptimeouts}=require('../model/user')
 const {sendwelcomeemail,sendresetpasswordemail}=require('../emails/account')
 const crypto=require('crypto')
-const auth=require('../middleware/auth')
+const {authuser,authserviceprovider}=require('../middleware/auth')
 
 
 router.post('/register',async(req,res)=>{
