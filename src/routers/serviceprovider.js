@@ -1,14 +1,15 @@
 const express=require('express')
 const router=new express.Router()
-const {Provider, Serviceprovider}= require('../model/serviceprovider')
-const ifsc=require('ifsc')
+const {Provider}= require('../model/provider')
+const {Serviceprovider}=require('../model/ser_provider')
 const {authuser,authserviceprovider}=require('../middleware/auth')
-const {sendwelcomeemail,sendresetpasswordemail}=require('../emails/account')
+const {sendwelcomeemail,sendresetpasswordemail,sendcancelemail}=require('../emails/account')
 const {User,otptimeouts}=require('../model/user')
 const crypto=require('crypto')
+const Car = require('../model/car')
 
 
-router.post('/registerserviceprovider',async(req,res)=>{
+router.post('/registerprovider',async(req,res)=>{
     const provider=new Provider(req.body)
     
     if(!req.body.confirmpassword){
@@ -27,7 +28,7 @@ router.post('/registerserviceprovider',async(req,res)=>{
     }
 })
 
-router.post('/loginserviceprovider',async(req,res)=>{
+router.post('/loginprovider',async(req,res)=>{
     if(!req.body.email){
         return res.status(400).json({error:"Please enter your email!"})
     }
@@ -108,25 +109,77 @@ try{
 }
 })
 
-router.post('/serviceproviderdetail',authserviceprovider,async(req,res)=>{
-    const provider=new Serviceprovider(req.body)
+router.post('/addserviceproviderdetail',authserviceprovider,async(req,res)=>{
+    const provider=new Serviceprovider({
+        ...req.body,
+        owner:req.provider._id
+    })    
     
     if(req.body.mobileno.length !== 10){
         return res.status(400).json({error:'mobileno must be 10 digits!'}) 
-    }
-
-    const ifsccode=ifsc.validate(provider.bankifsccode)
-    if(ifsccode===false){
-        return res.status(400).json({error:'ifsccode invalid!'})
     }
 
     if(req.body.adharcardno.length !== 12){
         return res.status(400).json({error:'adharcardno is invalid!'})
     }
 
+    if(!req.body.bankifsccode.match(/^[A-Za-z]{4}\d{7}$/)){
+        return res.status(400).json({error:'ifsccode is invalid!'})
+    }
     try{
         await provider.save()
         res.status(201).json({provider})
+    }catch(e){
+        res.status(400).json({error:e})
+    }
+})
+
+router.get('/serviceproviderdetail',authserviceprovider,async(req,res)=>{
+    try{
+        const provider=await Serviceprovider.findOne({owner:req.provider._id})
+        res.status(200).json({provider})
+    }catch(e){
+        res.status(400).json({error:e})
+    }
+})
+
+router.patch('/updateproviderdetail',authserviceprovider,async(req,res)=>{
+    try{
+        //const user =await User.findById(req.user._id) 
+        updates.forEach((update)=>req.user[update]=req.body[update])
+
+        await req.user.save()
+
+        //const user=await User.findByIdAndUpdate(req.params.id,req.body,{new:true,runValidators:true})
+        // if(!user){
+        //     res.status(404).send()
+        // }
+        res.status(200).json({user:req.user})
+    }catch(e){
+        res.status(400).json({error:e})
+    }
+})
+
+router.post('/logoutprovider',authserviceprovider,async(req,res)=>{
+    try{
+        req.provider.tokens=req.provider.tokens.filter((token)=>{
+            return token.token !== req.token
+        })
+        await req.provider.save()
+        res.status(200).json({})
+    }catch(e){
+        res.status(500).json({})
+    }
+})
+
+router.delete('/deleteprovider',authserviceprovider,async(req,res)=>{
+
+    try{
+        await req.provider.remove()
+        await Serviceprovider.findOneAndDelete({owner:req.provider._id})
+        await Car.findOneAndDelete({owner:req.provider._id})
+        sendcancelemail(req.provider.email,req.provider.name)
+        res.status(200).json({provider:req.provider})
     }catch(e){
         res.status(400).json({error:e})
     }

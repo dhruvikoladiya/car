@@ -4,7 +4,8 @@ const Car=require('../model/car')
 const fs = require('fs');
 const multer=require('multer')
 const sharp=require('sharp')
-const {Provider,Serviceprovider}=require('../model/serviceprovider')
+const {Provider}=require('../model/provider')
+const {Serviceprovider}=require('../model/ser_provider')
 const {authuser,authserviceprovider}=require('../middleware/auth')
 
 const upload=multer({
@@ -47,6 +48,15 @@ router.post('/cardetail',authserviceprovider,upload.fields([{name:'carimage'},{n
     try{
         await car.save()
         res.status(201).json({car})
+    }catch(e){
+        res.status(400).json({error:e})
+    }
+})
+
+router.get('/cardetail',authserviceprovider,async(req,res)=>{
+    try{
+        const car=await Car.find({owner:req.provider._id})
+        res.status(200).json({car})
     }catch(e){
         res.status(400).json({error:e})
     }

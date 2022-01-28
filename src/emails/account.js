@@ -20,7 +20,17 @@ const sendresetpasswordemail=(email,num)=>{
     })
 }
 
+const sendcancelemail=(email,name)=>{
+    sgmail.send({
+        to:email,
+        from:'koladiyadhruvi532@gmail.com',
+        subject:'Sorry to see you go!',
+        text:`Goodbye, ${name}. I hope to see you back sometime soon.`
+    })
+}
+
 module.exports={
     sendwelcomeemail,
-    sendresetpasswordemail
+    sendresetpasswordemail,
+    sendcancelemail
 }

@@ -2,6 +2,7 @@ const mongoose=require('mongoose')
 const validator=require('validator')
 const bcrypt=require('bcryptjs')
 const jwt=require('jsonwebtoken')
+const Userdetail=require('./userdetail')
 
 const userschema=new mongoose.Schema({
     firstname:{
@@ -45,6 +46,12 @@ const userschema=new mongoose.Schema({
     }]
 },{
     timestamps:true
+})
+
+userschema.virtual('userdetail',{
+    ref:'Userdetail',
+    localField:'_id',
+    foreignField:'owner'
 })
 
 const otpschema=new mongoose.Schema({

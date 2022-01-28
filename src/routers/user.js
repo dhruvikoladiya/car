@@ -2,9 +2,10 @@ const express=require('express')
 const router=new express.Router()
 const jwt=require('jsonwebtoken')
 const {User,otptimeouts}=require('../model/user')
-const {sendwelcomeemail,sendresetpasswordemail}=require('../emails/account')
+const {sendwelcomeemail,sendresetpasswordemail,sendcancelemail}=require('../emails/account')
 const crypto=require('crypto')
 const {authuser,authserviceprovider}=require('../middleware/auth')
+const Userdetail=require('../model/userdetail')
 
 
 router.post('/register',async(req,res)=>{
@@ -101,6 +102,61 @@ router.patch('/resetpassword',async(req,res)=>{
     }
 })
 
+router.post('/adduserdetail',authuser,async(req,res)=>{
+    const user=await new Userdetail({
+        ...req.body,
+        owner:req.user._id
+    })
+    if(req.body.phnno.length!==10){
+        return res.json({error:'phnno is invalid!'})
+    }
+    if(!req.body.pincode.match(/^[1-9][0-9]{5}$/)){
+        return res.status(400).json({error:'pincode is invalid!'})
+    }
+    if(!req.body.panno.match(/[A-Z]{5}[0-9]{4}[A-Z]{1}/)){
+        return res.status(400).json({error:'panno is invalid!'})
+    }
+    try{
+        await user.save()
+        res.status(201).json({user})
+    }catch(e){
+        res.status(400).json({error:e})
+    }
+})
 
+router.patch('/updateuser',authuser,async(req,res)=>{
+    try{
+        updates.forEach((update)=>req.user[update]=req.body[update])
+
+        await req.user.save()
+        res.status(200).json({user:req.user})
+    }catch(e){
+        res.status(400).json({error:e})
+    }
+})
+
+router.post('/logoutuser',authuser,async(req,res)=>{
+    try{
+        req.user.tokens=req.user.tokens.filter((token)=>{
+            return token.token !== req.token
+        })
+        await req.user.save()
+        res.status(200).json({})
+    }catch(e){
+        res.status(500).json({})
+    }
+})
+
+router.delete('/deleteuser',authuser,async(req,res)=>{
+
+    try{
+        await req.user.remove()
+        await Userdetail.findOneAndDelete({owner:req.user._id})
+        sendcancelemail(req.user.email,req.user.name)
+        res.status(200).json({user:req.user})
+    }catch(e){
+        res.status(400).json({})
+    }
+})
 
 module.exports=router

@@ -3,6 +3,7 @@ const validator=require('validator')
 const jwt=require('jsonwebtoken')
 const bcrypt=require('bcryptjs')
 const Car=require('./car')
+const {Serviceprovider}=require('./ser_provider')
 
 const providerschema=new mongoose.Schema({
     firstname:{
@@ -48,63 +49,12 @@ const providerschema=new mongoose.Schema({
     timestamps:true
 })
 
-const serviceproviderschema=new mongoose.Schema({
-    name:{
-        type:String,
-        required:true,
-        trim:true
-    },
-    address:{
-        type:String,
-        required:true,
-        trim:true
-    },
-    mobileno:{
-        type:Number,
-        required:true,
-        trim:true,
-        unique:true
-    },
-    city:{
-        type:String,
-        required:true
-    },
-    zipcode:{
-        type:Number,
-        required:true
-    },
-    bankname:{
-        type:String,
-        required:true,
-        trim:true
-    },
-    bankaccountno:{
-        type:Number,
-        required:true,
-        trim:true,
-        unique:true,
-        minlength:9,
-        maxlength:18
-    },
-    bankifsccode:{
-        type:String,
-        required:true
-    },
-    adharcardno:{
-        type:Number,
-        required:true,
-        trim:true,
-        unique:true  
-    }
-},{
-    timestamps:true
-})
-
-serviceproviderschema.virtual('car',{
-    ref:'Car',
+providerschema.virtual('ser_provider',{
+    ref:'Serviceprovider',
     localField:'_id',
     foreignField:'owner'
 })
+
 
 providerschema.methods.toJSON=function(){
     const provider=this
@@ -150,9 +100,6 @@ providerschema.pre('save',async function(next){
 
 const Provider=mongoose.model('Provider',providerschema)
 
-const Serviceprovider=mongoose.model('Serviceprovider',serviceproviderschema)
-
 module.exports={
-    Provider,
-    Serviceprovider
+    Provider
 }

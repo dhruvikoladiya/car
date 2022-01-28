@@ -1,6 +1,7 @@
 const jwt=require('jsonwebtoken')
 const {User,otptimeouts}=require('../model/user')
-const {Provider,Serviceprovider}=require('../model/serviceprovider')
+const {Provider}=require('../model/provider')
+const {Serviceprovider}=require('../model/ser_provider')
 
 const authuser=async (req,res,next)=>{
     try{
