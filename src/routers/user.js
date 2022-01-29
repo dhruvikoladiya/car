@@ -124,17 +124,6 @@ router.post('/adduserdetail',authuser,async(req,res)=>{
     }
 })
 
-router.patch('/updateuser',authuser,async(req,res)=>{
-    try{
-        updates.forEach((update)=>req.user[update]=req.body[update])
-
-        await req.user.save()
-        res.status(200).json({user:req.user})
-    }catch(e){
-        res.status(400).json({error:e})
-    }
-})
-
 router.post('/logoutuser',authuser,async(req,res)=>{
     try{
         req.user.tokens=req.user.tokens.filter((token)=>{

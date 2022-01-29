@@ -144,17 +144,22 @@ router.get('/serviceproviderdetail',authserviceprovider,async(req,res)=>{
 })
 
 router.patch('/updateproviderdetail',authserviceprovider,async(req,res)=>{
-    try{
-        //const user =await User.findById(req.user._id) 
-        updates.forEach((update)=>req.user[update]=req.body[update])
+    const updates=Object.keys(req.body)
+    const allowedtasks=['name','address','mobileno','city','zipcode','bankname','bankaccoutno','bankifsccode','adharcardno']
+    const validoperations=updates.every((update)=>allowedtasks.includes(update))
 
-        await req.user.save()
+    if(!validoperations){
+        res.json({error:"invalid updates"})
+    }
+    try{     
+        const data=await Provider.findOne({email:req.provider.email}) 
+    
+        const provider =await Serviceprovider.findOne({owner:data._id}) 
+    
+        updates.forEach((update)=>provider[update]=req.body[update])
 
-        //const user=await User.findByIdAndUpdate(req.params.id,req.body,{new:true,runValidators:true})
-        // if(!user){
-        //     res.status(404).send()
-        // }
-        res.status(200).json({user:req.user})
+        await provider.save()   
+        res.status(200).json({user:provider})
     }catch(e){
         res.status(400).json({error:e})
     }
