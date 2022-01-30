@@ -55,6 +55,11 @@ providerschema.virtual('ser_provider',{
     foreignField:'owner'
 })
 
+providerschema.virtual('order',{
+    ref:'Order',
+    localField:'_id',
+    foreignField:'providerid'
+})
 
 providerschema.methods.toJSON=function(){
     const provider=this

@@ -6,6 +6,8 @@ const {sendwelcomeemail,sendresetpasswordemail,sendcancelemail}=require('../emai
 const crypto=require('crypto')
 const {authuser,authserviceprovider}=require('../middleware/auth')
 const Userdetail=require('../model/userdetail')
+const Order=require('../model/order')
+const { Provider } = require('../model/provider')
 
 
 router.post('/register',async(req,res)=>{
@@ -102,6 +104,19 @@ router.patch('/resetpassword',async(req,res)=>{
     }
 })
 
+router.get('/user',async(req,res)=>{
+
+    try{
+        const limit=parseInt(req.query.limit)
+        const page=parseInt(req.query.page-1)||0
+        const user=await User.find({}).sort({createdAt:-1}).skip(page*limit).limit(limit)
+    
+        res.status(200).json({user})
+    }catch(e){
+        res.status(400).json({error:e})
+    }
+})
+
 router.post('/adduserdetail',authuser,async(req,res)=>{
     const user=await new Userdetail({
         ...req.body,
@@ -119,6 +134,18 @@ router.post('/adduserdetail',authuser,async(req,res)=>{
     try{
         await user.save()
         res.status(201).json({user})
+    }catch(e){
+        res.status(400).json({error:e})
+    }
+})
+
+router.get('/userdetail',async(req,res)=>{
+    try{
+        const limit=parseInt(req.query.limit)
+        const page=parseInt(req.query.page-1)||0
+        const user=await Userdetail.find({}).sort({createdAt:-1}).skip(page*limit).limit(limit)
+    
+        res.status(200).json({user})
     }catch(e){
         res.status(400).json({error:e})
     }
@@ -145,6 +172,24 @@ router.delete('/deleteuser',authuser,async(req,res)=>{
         res.status(200).json({user:req.user})
     }catch(e){
         res.status(400).json({})
+    }
+})
+
+router.post('/createorder',authuser,async(req,res)=>{
+    
+    const order=new Order({
+        ...req.body,
+        userid:req.user._id,
+        username:req.user.firstname,
+        city:provider.city
+    })
+    try{
+    
+        res.send(req.user)
+       // await order.save()
+        res.status(201).json()
+    }catch(e){
+        res.status(400).json({error:e})
     }
 })
 

@@ -109,6 +109,18 @@ try{
 }
 })
 
+router.get('/provider',async(req,res)=>{
+    try{
+        const limit=parseInt(req.query.limit)
+        const page=parseInt(req.query.page-1)||0
+        const provider=await Provider.find({}).sort({createdAt:-1}).skip(page*limit).limit(limit)
+    
+        res.status(200).json({provider})
+    }catch(e){
+        res.status(400).json({error:e})
+    }
+})
+
 router.post('/addserviceproviderdetail',authserviceprovider,async(req,res)=>{
     const provider=new Serviceprovider({
         ...req.body,
@@ -159,7 +171,19 @@ router.patch('/updateproviderdetail',authserviceprovider,async(req,res)=>{
         updates.forEach((update)=>provider[update]=req.body[update])
 
         await provider.save()   
-        res.status(200).json({user:provider})
+        res.status(200).json({provider})
+    }catch(e){
+        res.status(400).json({error:e})
+    }
+})
+
+router.get('/serviceprovider',async(req,res)=>{
+    try{
+        const limit=parseInt(req.query.limit)
+        const page=parseInt(req.query.page-1)||0
+        const provider=await Serviceprovider.find({}).sort({createdAt:-1}).skip(page*limit).limit(limit)
+    
+        res.status(200).json({provider})
     }catch(e){
         res.status(400).json({error:e})
     }

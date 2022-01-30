@@ -54,6 +54,12 @@ userschema.virtual('userdetail',{
     foreignField:'owner'
 })
 
+userschema.virtual('order',{
+    ref:'Order',
+    localField:'_id',
+    foreignField:'userid'
+})
+
 const otpschema=new mongoose.Schema({
     email:{
         type:String,

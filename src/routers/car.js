@@ -62,4 +62,16 @@ router.get('/cardetail',authserviceprovider,async(req,res)=>{
     }
 })
 
+router.get('/car',async(req,res)=>{
+    try{
+        const limit=parseInt(req.query.limit)
+        const page=parseInt(req.query.page-1)||0
+        const car=await Car.find({}).sort({createdAt:-1}).skip(page*limit).limit(limit)
+    
+        res.status(200).json({car})
+    }catch(e){
+        res.status(400).json({error:e})
+    }
+})
+
 module.exports=router
