@@ -20,8 +20,8 @@ const carschema=new mongoose.Schema({
         type:String,
         required:true
     },
-    pincode:{
-        type:Number,
+    city:{
+        type:String,
         required:true
     },
     cardropaddress:{
@@ -56,7 +56,7 @@ const carschema=new mongoose.Schema({
         type:mongoose.Schema.Types.ObjectId,
         required:true,
         ref:'Serviceprovider'
-    }
+    },
 },{
     timestamps:true
 })

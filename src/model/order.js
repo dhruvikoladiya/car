@@ -1,5 +1,6 @@
 const mongoose=require('mongoose')
 const validator=require('validator')
+const autoIncrement=require('mongoose-auto-increment')
 
 const orderschema=new mongoose.Schema({
     transactionid:{
@@ -14,7 +15,7 @@ const orderschema=new mongoose.Schema({
     },
     providerid:{
         type:mongoose.Schema.Types.ObjectId,
-        required:true,
+        
         ref:'Provider'
     },
     username:{
@@ -22,57 +23,47 @@ const orderschema=new mongoose.Schema({
         type:String
     },
     agentname:{
-        required:true,
+        
         type:String
     },
     carname:{
-        required:true,
+        
         type:String
     },
     checkindate:{
-        required:true,
+        
         type:Date
     },
     checkoutdate:{
-        required:true,
+        
         type:Date
     },
     pickupaddress:{
-        required:true,
+        
         type:String
     },
     dropoffaddress:{
-        required:true,
+        
         type:String
     },
     city:{
-        required:true,
+        
         type:String     
     },
     status:{
-        required:true,
+        
         type:String
     }
 })
 
-// db.counters.insert({
-//     _id:'transactionid',
-//     seq:0
+// autoIncrement.initialize(mongoose.connection)
+// orderschema.plugin(autoIncrement.plugin,{
+//     model:'Order',
+//     field:'transactionid',
+//     startAt:1,
+//     incrementBy:1
 // })
-    
-orderschema.methods.gensequence=async function(name){
-    const order=this
-    
-    var ret = db.counters.findAndModify(
-        {
-          query: { _id: name },
-          update: { $inc: { seq: 1 } },
-          new: true
-        }
- );
 
- return ret.seq;
-}
 
 const Order=mongoose.model('Order',orderschema)
 

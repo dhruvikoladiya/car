@@ -176,17 +176,21 @@ router.delete('/deleteuser',authuser,async(req,res)=>{
 })
 
 router.post('/createorder',authuser,async(req,res)=>{
-    
-    const order=new Order({
-        ...req.body,
-        userid:req.user._id,
-        username:req.user.firstname,
-        city:provider.city
-    })
+    const data=await Order.find({})
+    const id=Math.max(data.transactionid)
+    if(!id){
+        id=1
+    }
+    console.log(id)
     try{
-    
-        res.send(req.user)
-       // await order.save()
+        const order=new Order({
+            userid:req.user._id,
+            username:req.user.name
+        })
+        res.send(order)
+        const transactionid=await order.genseq()
+        await order.save()
+        res.send({order,transactionid})
         res.status(201).json()
     }catch(e){
         res.status(400).json({error:e})
