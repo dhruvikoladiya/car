@@ -31,7 +31,7 @@ router.post('/cardetail',authserviceprovider,upload.fields([{name:'carimage'},{n
     if(!req.body.carplateno.match(/^[A-Z|a-z]{2}[0-9]{2}[A-Z|a-z]{2}[0-9]{4}$/)){
         return res.status(400).json({error:'not valid plate number!'})
     }
-    if(req.body.fueltype!=="petrol"||req.body.fueltype!=="diesel"||req.body.fueltype!=="cng"){
+    if(!req.body.fueltype["petrol","diesel","cng"]){
         return res.status(400).json({error:'not valid fueltype!'})
     }
     try{
@@ -40,7 +40,7 @@ router.post('/cardetail',authserviceprovider,upload.fields([{name:'carimage'},{n
     }catch(e){
         res.status(400).json({error:e})
     }
-})
+})  
 
 router.get('/cardetail',authserviceprovider,async(req,res)=>{
     try{
