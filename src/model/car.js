@@ -14,7 +14,8 @@ const carschema=new mongoose.Schema({
     carplateno:{
         type:String,
         required:true,
-        unique:true
+        unique:true,
+        uppercase:true
     },
     carrent:{
         type:Number,
@@ -38,7 +39,8 @@ const carschema=new mongoose.Schema({
     },
     fueltype:{
         type:String,
-        required:true
+        required:true,
+        lowercase:true
     },
     transmissiontype:{
         type:String,
