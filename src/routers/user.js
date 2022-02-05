@@ -21,11 +21,10 @@ router.post('/register',async(req,res)=>{
         return res.json({message:'Password does not match'})
     }
     try{
-        //await user.save()
+        await user.save()
         await sendwelcomeemail(user.email,user.firstname)
         const token=await user.generateAuthToken()
-        res.send('hi')
-        //res.status(201).json({user,token})
+        res.status(201).json({user,token})
     }catch(e){
         res.status(400).json({error:e})
     } 
