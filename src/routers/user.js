@@ -9,7 +9,7 @@ const Userdetail=require('../model/userdetail')
 const Order=require('../model/order')
 const { Provider } = require('../model/provider')
 const Car = require('../model/car')
-const moment=require('moment')
+//const moment=require('moment')
 
 
 router.post('/register',async(req,res)=>{
@@ -23,8 +23,8 @@ router.post('/register',async(req,res)=>{
     try{
         await user.save()
         await sendwelcomeemail(user.email,user.firstname)
-        const token=await user.generateAuthToken()
-        res.status(201).json({user,token})
+        //const token=await user.generateAuthToken()
+        //res.status(201).json({user,token})
     }catch(e){
         res.status(400).json({error:e})
     } 
