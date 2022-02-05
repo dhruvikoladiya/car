@@ -42,9 +42,7 @@ router.post('/cardetail',authserviceprovider,upload.fields([{name:'carimage'},{n
         carinsurance:Buffer.from(req.files.carinsurance[0].buffer).toString('base64'),
         owner:req.provider._id 
     })
-    if(!req.body.pincode.match(/^[1-9][0-9]{5}$/)){
-        return res.status(400).json({error:'pincode is invalid!'})
-    }
+    
     try{
         await car.save()
         res.status(201).json({car})

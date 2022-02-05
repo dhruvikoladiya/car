@@ -16,6 +16,10 @@ const carschema=new mongoose.Schema({
         required:true,
         unique:true
     },
+    carrent:{
+        type:Number,
+        required:true
+    },
     carpickupaddress:{
         type:String,
         required:true
@@ -56,9 +60,21 @@ const carschema=new mongoose.Schema({
         type:mongoose.Schema.Types.ObjectId,
         required:true,
         ref:'Serviceprovider'
-    },
+    }
 },{
     timestamps:true
+})
+
+carschema.virtual('order',{
+    ref:'Order',
+    localField:'_id',
+    foreignField:'carid'
+})
+
+carschema.virtual('order',{
+    ref:'Order',
+    localField:'carplateno',
+    foreignField:'carno'
 })
 
 const Car=mongoose.model('Car',carschema)

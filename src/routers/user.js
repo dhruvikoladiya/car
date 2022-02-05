@@ -8,6 +8,8 @@ const {authuser,authserviceprovider}=require('../middleware/auth')
 const Userdetail=require('../model/userdetail')
 const Order=require('../model/order')
 const { Provider } = require('../model/provider')
+const Car = require('../model/car')
+const moment=require('moment')
 
 
 router.post('/register',async(req,res)=>{
@@ -23,8 +25,10 @@ router.post('/register',async(req,res)=>{
         await sendwelcomeemail(user.email,user.firstname)
         const token=await user.generateAuthToken()
         res.status(201).json({user,token})
+        res.write('<script>window.alert("Applied successfully");</script>')
     }catch(e){
         res.status(400).json({error:e})
+        res.write('<script>window.alert("eror");</script>')
     } 
 })
 
@@ -34,6 +38,7 @@ router.post('/login',async(req,res)=>{
         const user=await User.findByCredentials(req.body.email,req.body.password)
         const token=await user.generateAuthToken()
         res.status(200).json({user,token})
+        response.write("<h2>Applied successfully</h2>")
     }catch(e){
         res.status(400).json({error:"Email and password does not match!"})
     }
@@ -175,26 +180,66 @@ router.delete('/deleteuser',authuser,async(req,res)=>{
     }
 })
 
-router.post('/createorder',authuser,async(req,res)=>{
-    const data=await Order.find({})
-    const id=Math.max(data.transactionid)
-    if(!id){
-        id=1
-    }
-    console.log(id)
-    try{
-        const order=new Order({
-            userid:req.user._id,
-            username:req.user.name
-        })
-        res.send(order)
-        const transactionid=await order.genseq()
-        await order.save()
-        res.send({order,transactionid})
-        res.status(201).json()
-    }catch(e){
-        res.status(400).json({error:e})
-    }
-})
+// router.post('/createorder',async(req,res)=>{
+//     let date_ob = new Date('2022-02-01 17:19:9');
+//     let da=new Date('2022-02-04 17:19:9')
+//     const order=new Order({
+//         // userid:req.user._id,
+//         // username:req.user.name,
+//         checkindate:date_ob,
+//         checkoutdate:da
+//     })
+    
+//     try{
+//         res.send(order)
+//         //await order.save()
+//         res.status(201).json({order})
+//     }catch(e){
+//         res.status(400).json({error:e})
+//     }
+// })  
+
+// router.get('/checkstatus',async(req,res)=>{
+//     const checkin=req.body.checkindate
+//     const checkout=req.body.checkoutdate
+
+//     const a=Date.parse(checkin)
+//     const b=Date.parse(checkout)
+
+//     const car=await Car.find({}, {carplateno:1}) 
+//     //console.log(car)
+//     for (let c of car){
+//         const order=await Order.find({carno:c.carplateno},{transactionid:1})
+//         for(let b of order){
+//             console.log(order)
+//         const startdate=order.checkindate
+//         const enddate=order.checkoutdate
+
+//         const c=Date.parse(startdate)
+//         const d=Date.parse(enddate)
+//         console.log(c)
+//         console.log(d)
+//             // console.log(a)
+//             // console.log(b)
+//         // const range = moment(checkin).isBetween(startdate, enddate).toISOS
+//         // if(range===true){
+//         //     break
+//         // }
+//         // if(range===false){
+//         //     const range2=moment(checkin).isSame(startdate,enddate)
+//         //     if(range2===false){
+//         //         const range3 = moment(checkout).isBetween(startdate, enddate)
+//         //         if(range3===false){
+//         //             const range4 = moment(checkout).isSame(startdate, enddate)
+//         //             if(range4===false){
+//         //                 const car=await Car.find({})
+//         //                 console.log(car.carplateno)
+//         //             }
+//         //         }
+//         //     }
+//         // }
+//     }
+//     }
+// })
 
 module.exports=router

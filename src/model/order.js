@@ -1,69 +1,61 @@
 const mongoose=require('mongoose')
 const validator=require('validator')
-const autoIncrement=require('mongoose-auto-increment')
 
 const orderschema=new mongoose.Schema({
     transactionid:{
         type:String,
-        required:true,
+        default:"",
         unique:true,
+    },
+    carid:{
+        type:mongoose.Schema.Types.ObjectId,
+        default:"",
+        ref:'Car'
+    },
+    carno:{
+        type:String,
+        default:"",
+        ref:'Car'
     },
     userid:{
         type:mongoose.Schema.Types.ObjectId,
-        required:true,
+        default:"",
         ref:'User'
     },
     providerid:{
         type:mongoose.Schema.Types.ObjectId,
-        
+        default:"",
         ref:'Provider'
     },
     username:{
-        required:true,
+        default:"",
         type:String
     },
     agentname:{
-        
+        default:"",
         type:String
     },
     carname:{
-        
+        default:"",
         type:String
     },
     checkindate:{
-        
-        type:Date
-    },
-    checkoutdate:{
-        
-        type:Date
-    },
-    pickupaddress:{
-        
+        default:"",
         type:String
     },
-    dropoffaddress:{
-        
+    checkoutdate:{
+        default:"",
         type:String
     },
     city:{
-        
+        default:"",
         type:String     
     },
     status:{
-        
+        default:"",
         type:String
     }
 })
-
-// autoIncrement.initialize(mongoose.connection)
-// orderschema.plugin(autoIncrement.plugin,{
-//     model:'Order',
-//     field:'transactionid',
-//     startAt:1,
-//     incrementBy:1
-// })
-
 
 const Order=mongoose.model('Order',orderschema)
 
