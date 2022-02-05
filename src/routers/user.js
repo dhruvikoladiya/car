@@ -25,10 +25,8 @@ router.post('/register',async(req,res)=>{
         await sendwelcomeemail(user.email,user.firstname)
         const token=await user.generateAuthToken()
         res.status(201).json({user,token})
-        res.write('<script>window.alert("Applied successfully");</script>')
     }catch(e){
         res.status(400).json({error:e})
-        res.write('<script>window.alert("eror");</script>')
     } 
 })
 
@@ -38,7 +36,6 @@ router.post('/login',async(req,res)=>{
         const user=await User.findByCredentials(req.body.email,req.body.password)
         const token=await user.generateAuthToken()
         res.status(200).json({user,token})
-        response.write("<h2>Applied successfully</h2>")
     }catch(e){
         res.status(400).json({error:"Email and password does not match!"})
     }
