@@ -23,6 +23,7 @@ router.post('/register',async(req,res)=>{
     try{
         await user.save()
         await sendwelcomeemail(user.email,user.firstname)
+        res.send('hi')
         //const token=await user.generateAuthToken()
         //res.status(201).json({user,token})
     }catch(e){
