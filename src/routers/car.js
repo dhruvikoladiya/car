@@ -21,21 +21,7 @@ const upload=multer({
 })
 
 router.post('/cardetail',authserviceprovider,upload.fields([{name:'carimage'},{name:'carinsurance'}]),async(req,res)=>{
-    // var u8 = new Uint8Array(req.files.carimage[0].buffer);
-    // var decoder = new TextDecoder('utf8');
-    // var b64encoded = btoa(decoder.decode(u8));
-    // var b64encoded = Buffer.from(req.files.carimage[0].buffer).toString('base64')
-    //     fs.writeFile('myFile.txt', b64encoded, function(err) {
-    //     // Deal with possible error here.
-    //   });
-    //   fs.writeFile('myimage.txt', b64encoded, function(err) {
-    //     // Deal with possible error here.
-    //   });
-    // console.log(req.files.carinsurance[0].toString('base64'))
-    // var base64data = Buffer.from(new Buffer(req.files.carimage[0]), 'binary').toString('base64')
-    // var buffer = Buffer.from(new Buffer(req.files.carinsurance[0]), 'binary').toString('base64')
-    // console.log(base64data);
-    
+      
     const car=new Car({ 
         ...req.body,
         carimage:Buffer.from(req.files.carimage[0].buffer).toString('base64'),
