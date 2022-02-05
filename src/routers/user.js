@@ -9,8 +9,8 @@ const Userdetail=require('../model/userdetail')
 const Order=require('../model/order')
 const { Provider } = require('../model/provider')
 const Car = require('../model/car')
-//const moment=require('moment')
-
+const moment=require('moment')
+const fs=require('fs')
 
 router.post('/register',async(req,res)=>{
     const user=new User(req.body)
@@ -196,47 +196,49 @@ router.delete('/deleteuser',authuser,async(req,res)=>{
 //     }
 // })  
 
-// router.get('/checkstatus',async(req,res)=>{
-//     const checkin=req.body.checkindate
-//     const checkout=req.body.checkoutdate
+router.get('/checkstatus',async(req,res)=>{
+    var carArray = []
+    const checkin=req.body.checkindate
+    const checkout=req.body.checkoutdate
 
-//     const a=Date.parse(checkin)
-//     const b=Date.parse(checkout)
+    const cindate= moment(checkin).format('YYYY/MM/DD hh:mm:ss')
+    const coutdate= moment(checkout).format('YYYY/MM/DD hh:mm:ss')
+    
+    const car=await Car.find({}, {carplateno:1}) 
+    for (let c of car){
+        
+        var flag = true
+        const order=await Order.find({carno:c.carplateno},{transactionid:1,checkindate:1,checkoutdate:1})
+        for(let b of order){
+            
+            const startdate= moment(b.checkindate).format('YYYY/MM/DD hh:mm:ss')
+            const enddate= moment(b.checkoutdate).format('YYYY/MM/DD hh:mm:ss')
 
-//     const car=await Car.find({}, {carplateno:1}) 
-//     //console.log(car)
-//     for (let c of car){
-//         const order=await Order.find({carno:c.carplateno},{transactionid:1})
-//         for(let b of order){
-//             console.log(order)
-//         const startdate=order.checkindate
-//         const enddate=order.checkoutdate
+            if (moment(cindate).isBetween(startdate, enddate) || 
+                moment(cindate).isSame(startdate) ||
+                moment(cindate).isSame(enddate) ||
+                moment(coutdate).isBetween(startdate, enddate) || 
+                moment(coutdate).isSame(startdate) ||
+                moment(coutdate).isSame(enddate) ){
+                    flag = false
+            }
+        }
+        if (flag == true){
+            carArray.push(c.carplateno)
+        }
+    }
+    console.log(carArray)
 
-//         const c=Date.parse(startdate)
-//         const d=Date.parse(enddate)
-//         console.log(c)
-//         console.log(d)
-//             // console.log(a)
-//             // console.log(b)
-//         // const range = moment(checkin).isBetween(startdate, enddate).toISOS
-//         // if(range===true){
-//         //     break
-//         // }
-//         // if(range===false){
-//         //     const range2=moment(checkin).isSame(startdate,enddate)
-//         //     if(range2===false){
-//         //         const range3 = moment(checkout).isBetween(startdate, enddate)
-//         //         if(range3===false){
-//         //             const range4 = moment(checkout).isSame(startdate, enddate)
-//         //             if(range4===false){
-//         //                 const car=await Car.find({})
-//         //                 console.log(car.carplateno)
-//         //             }
-//         //         }
-//         //     }
-//         // }
-//     }
-//     }
-// })
+    try{
+        for(let i of carArray){
+            console.log(i)
+            const data=await Car.find({carplateno:i},{carimage:0, carinsurance:0})
+            console.log(data)
+        }
+        //res.status(200).json({car:data})
+    }catch(e){
+        res.status(400).json({error:e})
+    }
+}) 
 
 module.exports=router

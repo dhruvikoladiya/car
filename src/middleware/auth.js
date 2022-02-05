@@ -23,10 +23,11 @@ const authuser=async (req,res,next)=>{
 
 const authserviceprovider=async (req,res,next)=>{
     try{
+        console.log(req.header)
         const token=req.header('Authorization').replace('Bearer ','')
         const decoded=jwt.verify(token, process.env.JWT_SECRET)
         const provider=await Provider.findOne({_id:decoded._id,'tokens.token':token})
-
+       
         if(!provider){
             throw new Error()
         }
