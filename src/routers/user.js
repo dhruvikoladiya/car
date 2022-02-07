@@ -204,7 +204,7 @@ router.get('/checkstatus',async(req,res)=>{
     const cindate= moment(checkin).format('YYYY/MM/DD hh:mm:ss')
     const coutdate= moment(checkout).format('YYYY/MM/DD hh:mm:ss')
     
-    const car=await Car.find({}, {carplateno:1}) 
+    const car=await Car.find({city:req.body.city}, {carplateno:1}) 
     for (let c of car){
         
         var flag = true
@@ -230,12 +230,16 @@ router.get('/checkstatus',async(req,res)=>{
     console.log(carArray)
 
     try{
+        var carList = []
         for(let i of carArray){
-            console.log(i)
-            const data=await Car.find({carplateno:i},{carimage:0, carinsurance:0})
-            console.log(data)
+            var car1= new Car()
+            //console.log(i)
+            car1=await Car.find({carplateno:i})
+            //console.log(car1)
+            carList.push(car1)
         }
-        //res.status(200).json({car:data})
+        //console.log(carList)
+        res.status(200).json(JSON.parse(JSON.stringify(carList)))
     }catch(e){
         res.status(400).json({error:e})
     }
