@@ -51,6 +51,21 @@ router.get('/cardetail',authserviceprovider,async(req,res)=>{
     }
 })
 
+router.get('/car/:carplateno',authuser,async(req,res)=>{
+    const carplateno=req.params.carplateno
+   
+    try{
+        const car=await Car.findOne({carplateno})
+
+        if(!car){
+            res.status(404).json({message:"car not available!"})
+        }
+        res.status(200).json({car})
+    }catch(e){
+        res.status(400).json({error:e})
+    }
+})
+
 router.get('/car',async(req,res)=>{
     try{
         const limit=parseInt(req.query.limit)

@@ -8,15 +8,18 @@ const userdetailschema=new mongoose.Schema({
     },
     phnno:{
         required:true,
-        type:Number
+        type:Number,
+        unique:true
     },
     panno:{
         required:true,
-        type:String
+        type:String,
+        unique:true
     },
     dlno:{
         required:true,
-        type:String
+        type:String,
+        unique:true
     },
     city:{
         required:true,

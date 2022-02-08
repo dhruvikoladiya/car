@@ -196,7 +196,7 @@ router.delete('/deleteuser',authuser,async(req,res)=>{
 //     }
 // })  
 
-router.get('/checkstatus',async(req,res)=>{
+router.get('/checkstatus',authuser,async(req,res)=>{
     var carArray = []
     const checkin=req.body.checkindate
     const checkout=req.body.checkoutdate
