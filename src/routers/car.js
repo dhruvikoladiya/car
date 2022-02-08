@@ -36,7 +36,7 @@ router.post('/cardetail',authserviceprovider,upload.fields([{name:'carimage'},{n
     }
     try{
         await car.save()
-        res.status(201).json({car})
+        res.status(201).json({message:"car added successfully"})
     }catch(e){
         res.status(400).json({error:e})
     }
