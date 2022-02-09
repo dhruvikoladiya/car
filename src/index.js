@@ -11,7 +11,9 @@ const port=process.env.PORT
 
 
 app.use(express.json())
-app.use(cors())
+app.use(cors({
+    origin:'*'
+}))
 app.use(userrouter)
 app.use(servicerouter)
 app.use(carrouter)
