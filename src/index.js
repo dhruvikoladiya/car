@@ -9,14 +9,8 @@ const cors=require('cors')
 const app=express()
 const port=process.env.PORT
 
-var corsOptions = {
-    origin: 'http://localhost:3000/*',
-    optionsSuccessStatus: 200,
-    methods: "GET, PUT, POST, PATCH, DELETE"
-}
-
 app.use(express.json())
-app.use(cors(corsOptions))
+app.use(cors())
 app.use(userrouter)
 app.use(servicerouter)
 app.use(carrouter)
