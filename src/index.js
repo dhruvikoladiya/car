@@ -19,3 +19,7 @@ app.use(carrouter)
 app.listen(port,()=>{
     console.log('Server is up on '+port)
 })
+
+app.get('/cors', (req, res) => {
+    res.set('Access-Control-Allow-Origin', '*');
+})
