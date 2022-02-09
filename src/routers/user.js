@@ -153,6 +153,26 @@ router.get('/userdetail',async(req,res)=>{
     }
 })
 
+router.patch('/updateuserprofile',authuser,async(req,res)=>{
+    const updates=Object.keys(req.body)
+    const allowedtasks=['firstname','lastname','password']
+    const validoperations=updates.every((update)=>allowedtasks.includes(update))
+
+    if(!validoperations){
+        res.json({error:"invalid updates"})
+    }
+    try{     
+        const user=await User.findOne({email:req.user.email}) 
+    
+        updates.forEach((update)=>user[update]=req.body[update])
+
+        await user.save()   
+        res.status(200).json({user})
+    }catch(e){
+        res.status(400).json({error:e})
+    }
+})
+
 router.post('/logoutuser',authuser,async(req,res)=>{
     try{
         req.user.tokens=req.user.tokens.filter((token)=>{
