@@ -10,16 +10,13 @@ const app=express()
 const port=process.env.PORT
 
 app.use(express.json())
-app.use(cors())
+app.use(cors({
+    origin: 'http://localhost:3000'
+}))
 app.use(userrouter)
 app.use(servicerouter)
 app.use(carrouter)
 
-
 app.listen(port,()=>{
     console.log('Server is up on '+port)
-})
-
-app.get('/cors', (req, res) => {
-    res.set('Access-Control-Allow-Origin', '*');
 })
