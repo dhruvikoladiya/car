@@ -2,58 +2,67 @@ const mongoose=require('mongoose')
 const validator=require('validator')
 
 const orderschema=new mongoose.Schema({
-    transactionid:{
+   orderid:{
         type:String,
-        default:"",
         unique:true,
-    },
+        required:true
+    }, 
     carid:{
         type:mongoose.Schema.Types.ObjectId,
-        default:"",
-        ref:'Car'
-    },
-    carno:{
-        type:String,
-        default:"",
+        required:true,
         ref:'Car'
     },
     userid:{
         type:mongoose.Schema.Types.ObjectId,
-        default:"",
+        required:true,
         ref:'User'
     },
-    providerid:{
+    transactionid:{
+        type:String,
+        required:true,
+        unique:true
+    },
+    agentid:{
         type:mongoose.Schema.Types.ObjectId,
-        default:"",
+        required:true,
         ref:'Provider'
     },
-    username:{
-        default:"",
-        type:String
-    },
-    agentname:{
-        default:"",
+    carimage:{
+        required:true,
         type:String
     },
     carname:{
-        default:"",
+        required:true,
         type:String
     },
+    carno:{
+        type:String,
+        required:true,
+        ref:'Car'
+    },
+    city:{
+        required:true,
+        type:String     
+    },
     checkindate:{
-        default:"",
+        required:true,
         type:String
     },
     checkoutdate:{
-        default:"",
+        required:true,
         type:String
     },
-    city:{
-        default:"",
-        type:String     
-    },
-    status:{
-        default:"",
+    username:{
+        required:true,
         type:String
+    },
+    agentname:{
+        required:true,
+        type:String
+    },
+    transmissiontype:{
+        type:String,
+        required:true
     }
 })
 
