@@ -155,6 +155,24 @@ router.get('/serviceproviderdetail',authserviceprovider,async(req,res)=>{
     }
 })
 
+router.get('/providerdata',async(req,res)=>{
+    try{
+        const providerlist=[]
+   
+           const data=await Serviceprovider.find({})
+           for(let j of data){
+               const provider=await Provider.find({_id:j.owner})
+               for(let a of provider){
+                   providerlist.push({id:a._id,firstname:a.firstname,lastname:a.lastname,email:a.email,uid:j._id,address:j.address,mobileno:j.mobileno,city:j.city,zipcode:j.zipcode,bankname:j.bankname,bankaccountno:j.bankaccountno,bankifsccode:j.bankifsccode,adharcardno:j.adharcardno})
+               }
+           }
+           res.status(200).json({providerlist})
+    }catch(e){
+        res.status(400).json({error:e})
+    }
+})
+
+
 router.patch('/updateproviderdetail',authserviceprovider,async(req,res)=>{
     const updates=Object.keys(req.body)
     const allowedtasks=['name','address','mobileno','city','zipcode','bankname','bankaccoutno','bankifsccode','adharcardno']
