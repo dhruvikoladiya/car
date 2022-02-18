@@ -24,8 +24,8 @@ router.post('/cardetail',authserviceprovider,upload.fields([{name:'carimage'},{n
       
     const car=new Car({ 
         ...req.body,
-        carimage:Buffer.from(req.files.carimage[0].buffer).toString('base64'),
-        carinsurance:Buffer.from(req.files.carinsurance[0].buffer).toString('base64'),
+        carimage:Buffer.from(req.files.carimage[0].buffer),
+        carinsurance:Buffer.from(req.files.carinsurance[0].buffer),
         owner:req.provider._id 
     })
     if(!req.body.carplateno.match(/^[A-Z|a-z]{2}[0-9]{2}[A-Z|a-z]{2}[0-9]{4}$/)){
