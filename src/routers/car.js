@@ -1,7 +1,7 @@
 const express=require('express')
 const router=new express.Router()
 const Car=require('../model/car')
-const fs = require('fs');
+const fs = require('fs')
 const multer=require('multer')
 const sharp=require('sharp')
 const {Provider}=require('../model/provider')

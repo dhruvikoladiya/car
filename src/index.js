@@ -4,6 +4,7 @@ const User=require('./model/user')
 const userrouter=require('./routers/user')
 const servicerouter=require('./routers/serviceprovider')
 const carrouter=require('./routers/car')
+const adminrouter=require('./routers/admin')
 const cors=require('cors')
 
 const app=express()
@@ -14,7 +15,7 @@ app.use(cors())
 app.use(userrouter)
 app.use(servicerouter)
 app.use(carrouter)
-
+app.use(adminrouter)
 
 app.listen(port,()=>{
     console.log('Server is up on '+port)

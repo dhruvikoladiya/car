@@ -267,16 +267,19 @@ router.get('/checkstatus',authuser,async(req,res)=>{
     console.log(carArray)
 
     try{
+
+        
+        var car1= new Car()
         var carList = []
         for(let i of carArray){
-            var car1= new Car()
-            //console.log(i)
-            car1=await Car.find({carplateno:i})
-            //console.log(car1)
-            carList.push(car1)
+            
+            car1=await Car.find({carplateno:i},{carimage:0, carinsurance:0})
+           
+           carList.push(car1)
         }
         //console.log(carList)
         res.status(200).json(JSON.parse(JSON.stringify(carList)))
+        //res.status(200).json(JSON.parse(JSON.stringify(carList)))
     }catch(e){
         res.status(400).json({error:e})
     }
