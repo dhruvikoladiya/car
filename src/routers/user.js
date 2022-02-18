@@ -141,6 +141,23 @@ router.post('/adduserdetail',authuser,async(req,res)=>{
     }
 })
 
+router.get('/userdata',async(req,res)=>{
+     try{
+         const userlist=[]
+    
+            const data=await Userdetail.find({})
+            for(let j of data){
+                const user=await User.find({_id:j.owner})
+                for(let a of user){
+                    userlist.push({id:a._id,firstname:a.firstname,lastname:a.lastname,email:a.email,uid:j._id,gender:j.gender,phnno:j.phnno,panno:j.panno,dlno:j.dlno,city:j.city,pincode:j.pincode,address:j.address})
+                }
+            }
+            res.status(200).json({userlist})
+     }catch(e){
+         res.status(400).json({error:e})
+     }
+})
+
 router.get('/userdetail',async(req,res)=>{
     try{
         const limit=parseInt(req.query.limit)
