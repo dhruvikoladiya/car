@@ -17,6 +17,7 @@ router.post('/loginadmin',async(req,res)=>{
 
     try{
         const admin=await Admin.findByCredentials(req.body.id,req.body.password)
+        res.status(201).json({admin})
     }catch(e){
         res.status(400).json({error:"Email and password does not match!"})
     }
