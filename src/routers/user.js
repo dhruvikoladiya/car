@@ -278,7 +278,7 @@ router.get('/checkstatus',async(req,res)=>{
            carList.push(car1)
         }
         //console.log(carList)
-        res.status(200).json(JSON.parse(JSON.stringify(carList)))
+        res.status(200).json(JSON.stringify(Object.assign({}, carList)))
         //res.status(200).json(JSON.parse(JSON.stringify(carList)))
     }catch(e){
         res.status(400).json({error:e})
