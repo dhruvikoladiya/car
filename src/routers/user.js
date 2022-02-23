@@ -233,6 +233,7 @@ router.delete('/deleteuser',authuser,async(req,res)=>{
 //     }
 // })  
 
+
 router.get('/checkstatus',async(req,res)=>{
     var carArray = []
     const checkin=req.body.checkindate
@@ -275,11 +276,15 @@ router.get('/checkstatus',async(req,res)=>{
             
             car1=await Car.find({carplateno:i},{carimage:0, carinsurance:0})
            
-           carList.push(car1)
+            for(let j of car1){
+                carList.push(j)
+            }
+        //    carList.push(car1)
         }
-        //console.log(carList)
-        //res.status(200).json(JSON.stringify(Object.assign({}, carList)))
-        res.status(200).json(JSON.parse(JSON.stringify(carList)))
+        console.log(carList)
+
+        res.status(200).json({carList})
+        console.log('hi')
     }catch(e){
         res.status(400).json({error:e})
     }

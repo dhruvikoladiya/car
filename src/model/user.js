@@ -107,6 +107,8 @@ userschema.statics.findByCredentials=async(email,password)=>{
     return user
 }
 
+
+
 userschema.pre('save',async function(next){
     const user=this
 
